@@ -1,14 +1,11 @@
 package com.ouellettetech.duckit.presentation.navigation
 
-enum class AppScreens {
-    SplashScreen;
+enum class Screen {
+    SplashScreen,
+    SignInScreen;
+}
 
-    companion object {
-        fun fromRoute(route:String?) : AppScreens =
-            when(route?.substringBefore("/")){
-                SplashScreen.name -> SplashScreen
-                null -> TODO( "Return to homescreen")
-                else -> throw IllegalArgumentException("Route $route is not recognized")
-            }
-    }
+sealed class NavigationItem(val route: String) {
+    object SplashScreen : NavigationItem(Screen.SplashScreen.name)
+    object SignInScreen : NavigationItem(Screen.SignInScreen.name)
 }

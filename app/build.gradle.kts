@@ -79,6 +79,7 @@ dependencies {
     //Hilt dependencies
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+    implementation(libs.hilt.navigation.compose)
 
     // Navigation
     implementation(libs.androidx.navigation.compose)
@@ -91,6 +92,14 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // RetroFit
+    implementation(libs.squareup.retrofit2)
+//    implementation(libs.squareup.retrofit2.adapter)
+    implementation(libs.squareup.retrofit2.converter.gson)
+    implementation(libs.squareup.okhttp3.logging)
+    //implementation(libs.squareup.retrofit2.converter.scalers)
+
 }
 
 // Allow references to generated code
