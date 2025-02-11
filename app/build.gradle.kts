@@ -1,3 +1,6 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
+val baseURL: String = gradleLocalProperties(rootDir, providers).getProperty("baseURL")
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -10,9 +13,11 @@ android {
     namespace = "com.ouellettetech.duckit"
     compileSdk = 35
 
+
     defaultConfig {
+        buildConfigField("String", "baseURL", baseURL)
         applicationId = "com.ouellettetech.duckit"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -55,6 +60,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"

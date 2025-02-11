@@ -2,11 +2,9 @@ package com.ouellettetech.duckit.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.ouellettetech.duckit.presentation.screens.SplashScreen
 import com.ouellettetech.duckit.presentation.screens.SignInScreen
 
