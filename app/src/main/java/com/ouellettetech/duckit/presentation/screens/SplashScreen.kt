@@ -10,6 +10,5 @@ import androidx.hilt.navigation.compose.hiltViewModel
 fun SplashScreen(navController: NavController){
     val viewModel: SplashViewModel = hiltViewModel()
     viewModel.setNavController(navController)
-    Text(text = "Splash Screen Hilt")
-    viewModel.startTimer()
+
 }

@@ -1,6 +1,7 @@
 [versions]
 agp = "8.8.0"
 coreKtxVersion = "1.15.0"
+coreSplashscreen = "1.0.1"
 hiltAndroid = "2.55"
 hiltCompiler = "1.2.0"
 kotlin = "2.0.0"
@@ -15,9 +16,11 @@ lifecycleRuntimeKtxVersion = "2.8.7"
 navVersion = "2.8.6"
 retrofit = "2.9.0"
 okhttp = "4.10.0"
+coil = "2.6.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navVersion" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
@@ -39,6 +42,7 @@ squareup-retrofit2 = {group = "com.squareup.retrofit2", name = "retrofit", versi
 #squareup-retrofit2-adapter = {group = "com.squareup.retrofit2", name = "retrofit-adapter", version.ref = "retrofit" }
 squareup-retrofit2-converter-gson = {group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 squareup-okhttp3-logging = {group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp"}
+io-coil = {group = "io.coil-kt",name = "coil-compose", version.ref = "coil"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

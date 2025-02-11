@@ -17,7 +17,7 @@ android {
     defaultConfig {
         buildConfigField("String", "baseURL", baseURL)
         applicationId = "com.ouellettetech.duckit"
-        minSdk = 26
+        minSdk = 31
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -106,6 +106,10 @@ dependencies {
     implementation(libs.squareup.okhttp3.logging)
     //implementation(libs.squareup.retrofit2.converter.scalers)
 
+    // Image Loading
+    implementation(libs.io.coil)
+
+    implementation(libs.androidx.core.splashscreen)
 }
 
 // Allow references to generated code
