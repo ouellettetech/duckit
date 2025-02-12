@@ -35,9 +35,9 @@ import coil.compose.AsyncImage
 import com.ouellettetech.duckit.R
 import com.ouellettetech.duckit.data.model.DuckitPost
 import com.ouellettetech.duckit.data.model.DuckitPosts
-import com.ouellettetech.duckit.presentation.events.postsEvents
+import com.ouellettetech.duckit.presentation.events.PostsEvents
 import com.ouellettetech.duckit.presentation.uiState.PostsUIState
-import com.ouellettetech.duckit.presentation.viewModel.postsViewModel
+import com.ouellettetech.duckit.presentation.viewModel.PostsViewModel
 import com.ouellettetech.duckit.utils.Constants.upVoteFontSize
 
 @Composable
@@ -46,30 +46,37 @@ fun PostsScreen(
     navController: NavController
 ) {
 
-    val viewModel: postsViewModel = hiltViewModel()
+    val viewModel: PostsViewModel = hiltViewModel()
     viewModel.setNavController(navController)
     if (!uiState.loading && uiState.posts == null) {
         viewModel.getPosts() // TODO replace with Lifecycle observer that refreshes periodically.
     }
     if (uiState.networkdialog) {
-        ErrorDialog(stringResource(R.string.NetworkErrorMessage)) { viewModel.onEvent(postsEvents.DismissNetworkError) }
+        ErrorDialog(stringResource(R.string.NetworkErrorMessage)) { viewModel.onEvent(PostsEvents.DismissNetworkError) }
     }
     AllPosts(uiState.posts, viewModel)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AllPosts(listOfPosts: DuckitPosts?, viewModel: postsViewModel) {
+fun AllPosts(listOfPosts: DuckitPosts?, viewModel: PostsViewModel) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.app_name)) },
                 actions = {
                     Button(
-                        onClick = { viewModel.onEvent(postsEvents.SigninButtonPressed) },
+                        onClick = { viewModel.onEvent(PostsEvents.AddPost) },
+                    ) {
+                        Text("Post")
+                    }
+
+                    Button(
+                        onClick = { viewModel.onEvent(PostsEvents.SigninButtonPressed) },
                     ) {
                         Text("SignIn")
                     }
+
                 },
             )
         }
@@ -96,7 +103,7 @@ fun AllPosts(listOfPosts: DuckitPosts?, viewModel: postsViewModel) {
 
 
 @Composable
-fun PostCard(thisPost: DuckitPost, viewModel: postsViewModel) {
+fun PostCard(thisPost: DuckitPost, viewModel: PostsViewModel) {
     Column {
         Text(
             text = thisPost.headline
@@ -106,11 +113,11 @@ fun PostCard(thisPost: DuckitPost, viewModel: postsViewModel) {
             contentDescription = "Current Image"
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
-            UpVoteButton("↑", { viewModel.onEvent(postsEvents.UpVote(thisPost.id)) })
+            UpVoteButton("↑", { viewModel.onEvent(PostsEvents.UpVote(thisPost.id)) })
             Spacer(modifier = Modifier.padding(10.dp))
             Text("${thisPost.upvotes}", fontSize = upVoteFontSize.sp)
             Spacer(modifier = Modifier.padding(10.dp))
-            UpVoteButton("↓", { viewModel.onEvent(postsEvents.DownVote(thisPost.id)) })
+            UpVoteButton("↓", { viewModel.onEvent(PostsEvents.DownVote(thisPost.id)) })
         }
     }
 }

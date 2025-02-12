@@ -8,4 +8,8 @@
     <string name="PasswordIncorrectMessage">Login Failed, Try again.</string>
     <string name="AccountNotFoundMessage">No Account Found.</string>
     <string name="Login">Login</string>
+    <string name="CreateNewPostTitle">Create a new Post</string>
+    <string name="Submit">Submit</string>
+    <string name="imageHint">Image</string>
+    <string name="headerHint">Header</string>
 </resources>

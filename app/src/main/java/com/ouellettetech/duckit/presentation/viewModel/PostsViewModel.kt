@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.ouellettetech.duckit.networking.DuckitApiService
-import com.ouellettetech.duckit.presentation.events.postsEvents
+import com.ouellettetech.duckit.presentation.events.PostsEvents
 import com.ouellettetech.duckit.presentation.navigation.NavigationItem
 import com.ouellettetech.duckit.presentation.uiState.PostsUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +16,7 @@ import javax.inject.Inject
 import kotlin.concurrent.fixedRateTimer
 
 @HiltViewModel
-class postsViewModel @Inject constructor(
+class PostsViewModel @Inject constructor(
     application: Application,
     private val duckitApiService: DuckitApiService,
     private val sharedPreferences: SharedPreferences,
@@ -56,7 +56,7 @@ class postsViewModel @Inject constructor(
                     Log.d("Network", "After Network request")
                 } catch (ex: Exception) {
                     Log.e("Network", "Error Getting Data", ex)
-                    onEvent(postsEvents.NetworkError)
+                    onEvent(PostsEvents.NetworkError)
                 }
                 updateState {
                     it.copy(loading = false)
@@ -69,25 +69,25 @@ class postsViewModel @Inject constructor(
         mNavController = nav
     }
 
-    fun onEvent(event: postsEvents) {
+    fun onEvent(event: PostsEvents) {
         when (event) {
-            postsEvents.SigninButtonPressed -> {
+            PostsEvents.SigninButtonPressed -> {
                 mNavController.navigate(NavigationItem.SignInScreen.route)
             }
 
-            postsEvents.NetworkError -> {
+            PostsEvents.NetworkError -> {
                 updateState {
                     it.copy(networkdialog = true)
                 }
             }
 
-            postsEvents.DismissNetworkError -> {
+            PostsEvents.DismissNetworkError -> {
                 updateState {
                     it.copy(networkdialog = false)
                 }
             }
 
-            is postsEvents.DownVote -> {
+            is PostsEvents.DownVote -> {
                 viewModelScope.launch {
                     val result = duckitApiService.downVote(event.id)
                     if (result.isSuccessful) {
@@ -100,7 +100,7 @@ class postsViewModel @Inject constructor(
                 }
             }
 
-            is postsEvents.UpVote -> {
+            is PostsEvents.UpVote -> {
                 viewModelScope.launch {
                     val result = duckitApiService.upVote(event.id)
                     if (result.isSuccessful) {
@@ -111,6 +111,10 @@ class postsViewModel @Inject constructor(
                         }
                     }
                 }
+            }
+
+            PostsEvents.AddPost -> {
+                mNavController.navigate(NavigationItem.AddPostScreen.route)
             }
         }
     }

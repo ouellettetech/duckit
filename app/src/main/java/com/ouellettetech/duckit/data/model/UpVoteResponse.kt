@@ -1,5 +1,5 @@
 package com.ouellettetech.duckit.data.model
 
-data class upVoteResponse(
+data class UpVoteResponse(
     val upvotes: Int,
 )

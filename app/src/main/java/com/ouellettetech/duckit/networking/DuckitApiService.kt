@@ -1,9 +1,10 @@
 package com.ouellettetech.duckit.networking
 
+import com.ouellettetech.duckit.data.model.AddPostRequest
 import com.ouellettetech.duckit.data.model.DuckitPosts
 import com.ouellettetech.duckit.data.model.SignUpRequest
 import com.ouellettetech.duckit.data.model.Token
-import com.ouellettetech.duckit.data.model.upVoteResponse
+import com.ouellettetech.duckit.data.model.UpVoteResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -27,11 +28,16 @@ interface DuckitApiService {
     @POST(APIEndPoints.UP_VOTE)
     suspend fun upVote(
         @Path("id") id: String,
-    ): Response<upVoteResponse>
+    ): Response<UpVoteResponse>
 
     @POST(APIEndPoints.DOWN_VOTE)
     suspend fun downVote(
         @Path("id") id: String,
-    ): Response<upVoteResponse>
+    ): Response<UpVoteResponse>
+
+    @POST(APIEndPoints.POST)
+    suspend fun post(
+        @Body addPostRequest: AddPostRequest,
+    ): Response<Void>//Response Object
 
 }
