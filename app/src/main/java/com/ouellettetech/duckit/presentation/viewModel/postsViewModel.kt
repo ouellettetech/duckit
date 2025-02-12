@@ -89,15 +89,27 @@ class postsViewModel @Inject constructor(
 
             is postsEvents.DownVote -> {
                 viewModelScope.launch {
-                    duckitApiService.downVote(event.id)
-                    getPosts() // Refresh screen after Downvoting to get new vote count.
+                    val result = duckitApiService.downVote(event.id)
+                    if (result.isSuccessful) {
+                        getPosts() // Refresh screen after Downvoting to get new vote count.
+                    } else {
+                        updateState {
+                            it.copy(networkdialog = true)
+                        }
+                    }
                 }
             }
 
             is postsEvents.UpVote -> {
                 viewModelScope.launch {
-                    duckitApiService.upVote(event.id)
-                    getPosts() // Refresh screen after Downvoting to get new vote count.
+                    val result = duckitApiService.upVote(event.id)
+                    if (result.isSuccessful) {
+                        getPosts() // Refresh screen after Downvoting to get new vote count.
+                    } else {
+                        updateState {
+                            it.copy(networkdialog = true)
+                        }
+                    }
                 }
             }
         }
