@@ -1,41 +1,67 @@
 package com.ouellettetech.duckit.presentation.viewModel
 
 import android.app.Application
+import android.content.SharedPreferences
 import android.util.Log
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.ouellettetech.duckit.data.model.DuckitPosts
 import com.ouellettetech.duckit.networking.DuckitApiService
-import com.ouellettetech.duckit.presentation.events.SignInEvents
 import com.ouellettetech.duckit.presentation.events.postsEvents
 import com.ouellettetech.duckit.presentation.navigation.NavigationItem
+import com.ouellettetech.duckit.presentation.uiState.PostsUIState
+import com.ouellettetech.duckit.presentation.uiState.SignInUIState
+import com.ouellettetech.duckit.utils.Constants.SharedPrefTokenName
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.util.Timer
 import javax.inject.Inject
+import kotlin.concurrent.fixedRateTimer
 
 @HiltViewModel
 class postsViewModel @Inject constructor(
     application: Application,
     private val duckitApiService: DuckitApiService,
-) : DuckitViewModel() {
+    private val sharedPreferences: SharedPreferences,
+) : DuckitViewModel<PostsUIState>() {
     private lateinit var mNavController: NavController
-    var posts: DuckitPosts? = null //Should move to uiState object...
-    var loading: Boolean = false
-    var networkdialog = false
+    var getPostUpdates: Timer? = null
+    // sharedPreferences.getString(SharedPrefTokenName, "").isNullOrEmpty())
 
+    fun setupTimer(){
+        viewModelScope.launch {
+            if(getPostUpdates != null){
+                getPostUpdates?.cancel()
+            }
+            getPostUpdates = fixedRateTimer(initialDelay = 60000L, period = 60000L) {
+                getPosts()
+            }
+        }
+    }
+
+    fun cancelTimer(){
+        getPostUpdates?.cancel()
+    }
 
     fun getPosts() {
-        if(!loading) {
-            loading = true
+        if(!state.value.loading) {
+            updateState {
+                it.copy(loading = true)
+            }
             viewModelScope.launch {
                 try {
-                    posts=duckitApiService.getPosts()
+                    val posts = duckitApiService.getPosts()
+                    if (posts != null) {
+                        updateState {
+                            it.copy(posts = posts)
+                        }
+                    }
                     Log.d("Network", "After Network request")
                 } catch (ex: Exception){
                     Log.e("Network", "Error Getting Data",ex)
                     onEvent(postsEvents.NetworkError)
+                }
+                updateState {
+                    it.copy(loading = false)
                 }
             }
         }
@@ -50,10 +76,24 @@ class postsViewModel @Inject constructor(
             postsEvents.SigninButtonPressed -> {
                 mNavController.navigate(NavigationItem.SignInScreen.route)
             }
+
             postsEvents.NetworkError -> {
-                networkdialog = true
+                updateState {
+                    it.copy(networkdialog = true)
+                }
+            }
+
+            postsEvents.DismissNetworkError -> {
+                updateState {
+                    it.copy(networkdialog = false)
+                }
             }
         }
     }
 
+    override fun initState(): PostsUIState =
+        PostsUIState(loading = false,
+            posts = null,
+            networkdialog = false,
+            loggedIn = false)
 }

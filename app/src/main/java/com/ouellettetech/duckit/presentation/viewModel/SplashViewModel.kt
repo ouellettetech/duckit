@@ -8,15 +8,19 @@ import androidx.navigation.NavController
 //import com.ouellettetech.duckit.presentation.navigation.AppScreens
 import com.ouellettetech.duckit.presentation.navigation.NavigationItem
 import com.ouellettetech.duckit.presentation.navigation.Screen
+import com.ouellettetech.duckit.presentation.uiState.SignInUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     application: Application
-) : DuckitViewModel() {
+) : DuckitViewModel<SignInUIState>() {
     private var runningTimer: Boolean = false
     private lateinit var mNavController: NavController
+    override fun initState(): SignInUIState {
+        TODO("Not yet implemented")
+    }
 
     override fun onCreate(owner: LifecycleOwner){
         super.onCreate(owner)

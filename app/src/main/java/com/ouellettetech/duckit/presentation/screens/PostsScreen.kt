@@ -41,22 +41,27 @@ import com.ouellettetech.duckit.R
 import com.ouellettetech.duckit.data.model.DuckitPost
 import com.ouellettetech.duckit.data.model.DuckitPosts
 import com.ouellettetech.duckit.presentation.events.SignInEvents
+import com.ouellettetech.duckit.presentation.events.postsEvents
+import com.ouellettetech.duckit.presentation.uiState.PostsUIState
+import com.ouellettetech.duckit.presentation.uiState.SignInUIState
 import com.ouellettetech.duckit.presentation.viewModel.SignInViewModel
 import com.ouellettetech.duckit.presentation.viewModel.postsViewModel
 import com.ouellettetech.duckit.utils.Constants.upVoteFontSize
 
 @Composable
-fun PostsScreen(navController: NavController){
+fun PostsScreen(
+    uiState: PostsUIState,
+    navController: NavController){
+
     val viewModel: postsViewModel = hiltViewModel()
     viewModel.setNavController(navController)
-    if(!viewModel.loading){
+    if(!uiState.loading){
         viewModel.getPosts()
     }
-    if(viewModel.networkdialog){
-        viewModel.networkdialog = false
-        NetworkErrorDialog {  }
+    if(uiState.networkdialog){
+        ErrorDialog(stringResource(R.string.NetworkErrorMessage)) { viewModel.onEvent(postsEvents.DismissNetworkError) }
     }
-    AllPosts(viewModel.posts)
+    AllPosts(uiState.posts)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,6 +76,7 @@ fun AllPosts(listOfPosts: DuckitPosts?) {
     ) { padding ->
         val allPosts: List<DuckitPost>? = listOfPosts?.Posts
         if(allPosts.isNullOrEmpty()){
+            Text("Loading Please Wait...")// Should replace with a fancy Skeleton.
             // Show message that there are no posts.
         } else {
             Surface (
@@ -122,7 +128,7 @@ fun UpVoteButton(text: String, onClick: () -> Unit ){
     }
 }
 @Composable
-fun NetworkErrorDialog(onDismissRequest: () -> Unit) {
+fun ErrorDialog(Message: String, onDismissRequest: () -> Unit) {
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             modifier = Modifier
@@ -132,7 +138,7 @@ fun NetworkErrorDialog(onDismissRequest: () -> Unit) {
             shape = RoundedCornerShape(16.dp),
         ) {
             Text(
-                text = "There was an error in the network request!",
+                text = Message,
                 modifier = Modifier
                     .fillMaxSize()
                     .wrapContentSize(Alignment.Center),

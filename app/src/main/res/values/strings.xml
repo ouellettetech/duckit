@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Duckit</string>
+    <string name="loginTitle">Login to Duckit!</string>
+    <string name="emailHint">email</string>
+    <string name="passwordHint">password</string>
+    <string name="NetworkErrorMessage">There was a Network Error.</string>
+    <string name="AccountExistsMessage">An account with that email already exists.</string>
+    <string name="PasswordIncorrectMessage">Login Failed, Try again.</string>
+    <string name="AccountNotFoundMessage">No Account Found.</string>
 </resources>
