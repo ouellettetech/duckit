@@ -4,6 +4,7 @@ import androidx.compose.ui.unit.sp
 import com.ouellettetech.duckit.BuildConfig
 
 object Constants {
+    const val HEADER_AUTHORIZATION = "Authorization"
     const val NETWORK_PASSWORD_INCORRECT = 403
     const val NETWORK_ACCOUNT_NOT_FOUND = 404
     const val SharedPrefName = "Duckit_pref"

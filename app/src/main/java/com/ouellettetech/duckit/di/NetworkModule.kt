@@ -1,6 +1,8 @@
 package com.ouellettetech.duckit.di
 
 import android.content.Context
+import android.content.SharedPreferences
+import com.ouellettetech.duckit.networking.AuthenticationInterceptor
 import com.ouellettetech.duckit.networking.DuckitApiService
 import com.ouellettetech.duckit.utils.Constants
 import dagger.Module
@@ -14,17 +16,19 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
 import javax.inject.Singleton
 
-@Module@InstallIn(SingletonComponent::class)
+@Module
+@InstallIn(SingletonComponent::class)
 open class NetworkModule {
     protected open fun baseUrl(): String = Constants.BASE_URL
 
     @Provides
     @Singleton
     fun provideOkHttpClient(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
+        sharedPreferences: SharedPreferences
     ): OkHttpClient {
         var builder = OkHttpClient.Builder()
-        //    .addInterceptor(AddAuthInterceptor)
+            .addInterceptor(AuthenticationInterceptor(sharedPreferences))
         return builder.build()
     }
 
