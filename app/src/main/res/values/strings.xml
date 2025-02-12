@@ -7,4 +7,5 @@
     <string name="AccountExistsMessage">An account with that email already exists.</string>
     <string name="PasswordIncorrectMessage">Login Failed, Try again.</string>
     <string name="AccountNotFoundMessage">No Account Found.</string>
+    <string name="Login">Login</string>
 </resources>

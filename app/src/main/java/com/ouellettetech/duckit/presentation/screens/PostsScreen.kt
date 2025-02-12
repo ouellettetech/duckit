@@ -48,22 +48,29 @@ fun PostsScreen(
 
     val viewModel: postsViewModel = hiltViewModel()
     viewModel.setNavController(navController)
-    if (!uiState.loading) {
-        viewModel.getPosts()
+    if (!uiState.loading && uiState.posts == null) {
+        viewModel.getPosts() // TODO replace with Lifecycle observer that refreshes periodically.
     }
     if (uiState.networkdialog) {
         ErrorDialog(stringResource(R.string.NetworkErrorMessage)) { viewModel.onEvent(postsEvents.DismissNetworkError) }
     }
-    AllPosts(uiState.posts)
+    AllPosts(uiState.posts, viewModel)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AllPosts(listOfPosts: DuckitPosts?) {
+fun AllPosts(listOfPosts: DuckitPosts?, viewModel: postsViewModel) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.app_name)) }
+                title = { Text(stringResource(R.string.app_name)) },
+                actions = {
+                    Button(
+                        onClick = { viewModel.onEvent(postsEvents.SigninButtonPressed) },
+                    ) {
+                        Text("SignIn")
+                    }
+                },
             )
         }
     ) { padding ->
@@ -79,7 +86,7 @@ fun AllPosts(listOfPosts: DuckitPosts?) {
             ) {
                 LazyColumn {
                     items(allPosts) { duckitPost ->
-                        PostCard(duckitPost)
+                        PostCard(duckitPost, viewModel)
                     }
                 }
             }
@@ -89,7 +96,7 @@ fun AllPosts(listOfPosts: DuckitPosts?) {
 
 
 @Composable
-fun PostCard(thisPost: DuckitPost) {
+fun PostCard(thisPost: DuckitPost, viewModel: postsViewModel) {
     Column {
         Text(
             text = thisPost.headline
@@ -99,11 +106,11 @@ fun PostCard(thisPost: DuckitPost) {
             contentDescription = "Current Image"
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
-            UpVoteButton("↑", {})
+            UpVoteButton("↑", { viewModel.onEvent(postsEvents.UpVote(thisPost.id)) })
             Spacer(modifier = Modifier.padding(10.dp))
             Text("${thisPost.upvotes}", fontSize = upVoteFontSize.sp)
             Spacer(modifier = Modifier.padding(10.dp))
-            UpVoteButton("↓", {})
+            UpVoteButton("↓", { viewModel.onEvent(postsEvents.DownVote(thisPost.id)) })
         }
     }
 }

@@ -6,7 +6,7 @@ class APIEndPoints {
         const val SIGN_UP = "/signup"
         const val POSTS = "/posts"
         const val UP_VOTE = "/posts/{id}/upvote"
-        const val DOWN_VOTE = "/posts/:id/downvote"
+        const val DOWN_VOTE = "/posts/{id}/downvote"
         const val POST = "/posts"
     }
 }

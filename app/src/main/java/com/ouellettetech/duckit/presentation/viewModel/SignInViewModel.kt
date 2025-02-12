@@ -102,7 +102,9 @@ class SignInViewModel @Inject constructor(
                 token = response.body()?.token
                 Log.d(
                     "Network",
-                    "After Network request Code: ${response.code()} Message ${response.message()}"
+                    "After Network request Code: ${response.code()} Message ${
+                        response.body().toString()
+                    }"
                 )
             } catch (ex: Exception) {
                 Log.e("Network", "Error Getting Data", ex)
