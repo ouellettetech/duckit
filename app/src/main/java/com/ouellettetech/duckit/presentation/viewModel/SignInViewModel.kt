@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
 
+
 @HiltViewModel
 class SignInViewModel @Inject constructor(
     application: Application,
@@ -32,29 +33,34 @@ class SignInViewModel @Inject constructor(
         mNavController = nav
     }
 
-    fun onEvent(event: SignInEvents){
-        when(event){
+    fun onEvent(event: SignInEvents) {
+        when (event) {
             SignInEvents.SigninButtonPressed -> {
-                Signin(email,password)
+                Signin(email, password)
             }
+
             SignInEvents.SignUpButtonPressed -> {
-                SignUp(email,password)
+                SignUp(email, password)
             }
+
             SignInEvents.NetworkError -> {
                 updateState {
                     it.copy(networkdialog = true)
                 }
             }
+
             SignInEvents.AccountExists -> {
                 updateState {
                     it.copy(accountExists = true)
                 }
             }
+
             SignInEvents.AccountNotFound -> {
                 updateState {
                     it.copy(accountNotFound = true)
                 }
             }
+
             SignInEvents.PasswordIncorrect -> {
                 updateState {
                     it.copy(passwordIncorrect = true)
@@ -66,16 +72,19 @@ class SignInViewModel @Inject constructor(
                     it.copy(accountExists = false)
                 }
             }
+
             SignInEvents.DismissNetworkError -> {
                 updateState {
                     it.copy(networkdialog = false)
                 }
             }
+
             SignInEvents.DissmissAccountNotFound -> {
                 updateState {
                     it.copy(accountNotFound = false)
                 }
             }
+
             SignInEvents.DissmissPasswordIncorrect -> {
                 updateState {
                     it.copy(passwordIncorrect = false)
@@ -84,33 +93,37 @@ class SignInViewModel @Inject constructor(
         }
     }
 
-    fun Signin(email: String, password: String){
+    fun Signin(email: String, password: String) {
         viewModelScope.launch {
-            var token:String? = null
+            var token: String? = null
             var response: Response<Token>? = null
             try {
-                response = duckitApiService.signIn(SignUpRequest(email,password))
+                response = duckitApiService.signIn(SignUpRequest(email, password))
                 token = response.body()?.token
-                Log.d("Network", "After Network request Code: ${response.code()} Message ${response.message()}")
-            } catch (ex: Exception){
-                Log.e("Network", "Error Getting Data",ex)
+                Log.d(
+                    "Network",
+                    "After Network request Code: ${response.code()} Message ${response.message()}"
+                )
+            } catch (ex: Exception) {
+                Log.e("Network", "Error Getting Data", ex)
             }
             updateState {
                 it.copy(loading = false)
             }
 
-            if(!token.isNullOrEmpty()){
+            if (!token.isNullOrEmpty()) {
                 sharedPreferences.edit().putString(SharedPrefTokenName, token).apply()
                 mNavController.navigate(NavigationItem.PostsScreen.route)
-            }
-            else {
-                when(response?.code()) {
+            } else {
+                when (response?.code()) {
                     Constants.NETWORK_ACCOUNT_NOT_FOUND -> {
                         onEvent(SignInEvents.AccountNotFound)
                     }
+
                     Constants.NETWORK_PASSWORD_INCORRECT -> {
                         onEvent(SignInEvents.PasswordIncorrect)
                     }
+
                     else -> {
                         onEvent(SignInEvents.NetworkError)
                     }
@@ -121,25 +134,27 @@ class SignInViewModel @Inject constructor(
 
     fun SignUp(email: String, password: String) {
         viewModelScope.launch {
-            var token:String? = null
+            var token: String? = null
             var response: Response<Token>? = null
             try {
-                response = duckitApiService.signUp(SignUpRequest(email,password))
+                response = duckitApiService.signUp(SignUpRequest(email, password))
                 token = response.body()?.token
-                Log.d("Network", "After Network request Code: ${response.code()} Message ${response.message()}")
-            } catch (ex: Exception){
-                Log.e("Network", "Error Getting Data",ex)
+                Log.d(
+                    "Network",
+                    "After Network request Code: ${response.code()} Message ${response.message()}"
+                )
+            } catch (ex: Exception) {
+                Log.e("Network", "Error Getting Data", ex)
             }
             updateState {
                 it.copy(loading = false)
             }
 
-            if(!token.isNullOrEmpty()){
+            if (!token.isNullOrEmpty()) {
                 sharedPreferences.edit().putString(SharedPrefTokenName, token).apply()
                 mNavController.navigate(NavigationItem.PostsScreen.route)
-            }
-            else {
-                if(response?.code() == Constants.NETWORK_ACCOUNT_EXISTS){
+            } else {
+                if (response?.code() == Constants.NETWORK_ACCOUNT_EXISTS) {
                     onEvent(SignInEvents.AccountExists)
                 } else {
                     onEvent(SignInEvents.NetworkError)
@@ -147,6 +162,7 @@ class SignInViewModel @Inject constructor(
             }
         }
     }
+
     fun emailUpdate(newEmail: String) {
         email = newEmail
     }
@@ -156,13 +172,14 @@ class SignInViewModel @Inject constructor(
     }
 
     override fun initState(): SignInUIState =
-        SignInUIState(loading = false,
-                email = "",
-                password = "",
-                networkdialog = false,
-                accountExists = false,
-                passwordIncorrect = false,
-                accountNotFound = false,
+        SignInUIState(
+            loading = false,
+            email = "",
+            password = "",
+            networkdialog = false,
+            accountExists = false,
+            passwordIncorrect = false,
+            accountNotFound = false,
         )
 
 }

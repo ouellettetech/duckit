@@ -1,13 +1,10 @@
 package com.ouellettetech.duckit.presentation.screens
 
-import android.widget.EditText
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -23,14 +20,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.SemanticsProperties.EditableText
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.ouellettetech.duckit.R
-import com.ouellettetech.duckit.data.model.DuckitPost
 import com.ouellettetech.duckit.presentation.events.SignInEvents
 import com.ouellettetech.duckit.presentation.uiState.SignInUIState
 import com.ouellettetech.duckit.presentation.viewModel.SignInViewModel
@@ -39,25 +32,34 @@ import com.ouellettetech.duckit.presentation.viewModel.SignInViewModel
 @Composable
 fun SignInScreen(
     uiState: SignInUIState,
-    navController: NavController) {
+    navController: NavController
+) {
 
     val viewModel: SignInViewModel = hiltViewModel()
     viewModel.setNavController(navController)
 
-    if(uiState.networkdialog){
+    if (uiState.networkdialog) {
         ErrorDialog(stringResource(R.string.NetworkErrorMessage)) { viewModel.onEvent(SignInEvents.DismissNetworkError) }
     }
 
-    if(uiState.accountExists){
+    if (uiState.accountExists) {
         ErrorDialog(stringResource(R.string.AccountExistsMessage)) { viewModel.onEvent(SignInEvents.DismissAccountExists) }
     }
 
-    if(uiState.passwordIncorrect){
-        ErrorDialog(stringResource(R.string.PasswordIncorrectMessage)) { viewModel.onEvent(SignInEvents.DissmissPasswordIncorrect) }
+    if (uiState.passwordIncorrect) {
+        ErrorDialog(stringResource(R.string.PasswordIncorrectMessage)) {
+            viewModel.onEvent(
+                SignInEvents.DissmissPasswordIncorrect
+            )
+        }
     }
 
-    if(uiState.accountNotFound){
-        ErrorDialog(stringResource(R.string.AccountNotFoundMessage)) { viewModel.onEvent(SignInEvents.DissmissAccountNotFound) }
+    if (uiState.accountNotFound) {
+        ErrorDialog(stringResource(R.string.AccountNotFoundMessage)) {
+            viewModel.onEvent(
+                SignInEvents.DissmissAccountNotFound
+            )
+        }
     }
 
     Scaffold(
@@ -77,6 +79,7 @@ fun SignInScreen(
     }
 
 }
+
 @Composable
 fun SignInPrompt(viewModel: SignInViewModel) {
     var email by rememberSaveable { mutableStateOf("") } //These should be in the UIState...
@@ -90,7 +93,7 @@ fun SignInPrompt(viewModel: SignInViewModel) {
                 email = it
                 viewModel.emailUpdate(it)
             },
-            label = { Text(stringResource(R.string.emailHint))}
+            label = { Text(stringResource(R.string.emailHint)) }
         )
         Spacer(modifier = Modifier.padding(10.dp))
         TextField(
@@ -99,20 +102,20 @@ fun SignInPrompt(viewModel: SignInViewModel) {
                 password = it
                 viewModel.passwordUpdate(it)
             },
-            label = { Text(stringResource(R.string.passwordHint))}
+            label = { Text(stringResource(R.string.passwordHint)) }
         )
         Spacer(modifier = Modifier.padding(20.dp))
 
         Row {
             Button(
-                onClick = {viewModel.onEvent(SignInEvents.SigninButtonPressed)},
-                )  {
+                onClick = { viewModel.onEvent(SignInEvents.SigninButtonPressed) },
+            ) {
                 Text("SignIn")
             }
             Spacer(modifier = Modifier.padding(10.dp))
             Button(
-                onClick = {viewModel.onEvent(SignInEvents.SignUpButtonPressed)},
-            )  {
+                onClick = { viewModel.onEvent(SignInEvents.SignUpButtonPressed) },
+            ) {
                 Text("SignUp")
             }
 

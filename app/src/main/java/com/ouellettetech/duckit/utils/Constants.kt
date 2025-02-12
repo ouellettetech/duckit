@@ -1,6 +1,5 @@
 package com.ouellettetech.duckit.utils
 
-import androidx.compose.ui.unit.sp
 import com.ouellettetech.duckit.BuildConfig
 
 object Constants {

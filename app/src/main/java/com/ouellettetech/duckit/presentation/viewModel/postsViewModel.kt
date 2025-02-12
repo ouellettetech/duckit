@@ -9,8 +9,6 @@ import com.ouellettetech.duckit.networking.DuckitApiService
 import com.ouellettetech.duckit.presentation.events.postsEvents
 import com.ouellettetech.duckit.presentation.navigation.NavigationItem
 import com.ouellettetech.duckit.presentation.uiState.PostsUIState
-import com.ouellettetech.duckit.presentation.uiState.SignInUIState
-import com.ouellettetech.duckit.utils.Constants.SharedPrefTokenName
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.Timer
@@ -27,9 +25,9 @@ class postsViewModel @Inject constructor(
     var getPostUpdates: Timer? = null
     // sharedPreferences.getString(SharedPrefTokenName, "").isNullOrEmpty())
 
-    fun setupTimer(){
+    fun setupTimer() {
         viewModelScope.launch {
-            if(getPostUpdates != null){
+            if (getPostUpdates != null) {
                 getPostUpdates?.cancel()
             }
             getPostUpdates = fixedRateTimer(initialDelay = 60000L, period = 60000L) {
@@ -38,12 +36,12 @@ class postsViewModel @Inject constructor(
         }
     }
 
-    fun cancelTimer(){
+    fun cancelTimer() {
         getPostUpdates?.cancel()
     }
 
     fun getPosts() {
-        if(!state.value.loading) {
+        if (!state.value.loading) {
             updateState {
                 it.copy(loading = true)
             }
@@ -56,8 +54,8 @@ class postsViewModel @Inject constructor(
                         }
                     }
                     Log.d("Network", "After Network request")
-                } catch (ex: Exception){
-                    Log.e("Network", "Error Getting Data",ex)
+                } catch (ex: Exception) {
+                    Log.e("Network", "Error Getting Data", ex)
                     onEvent(postsEvents.NetworkError)
                 }
                 updateState {
@@ -71,8 +69,8 @@ class postsViewModel @Inject constructor(
         mNavController = nav
     }
 
-    fun onEvent(event: postsEvents){
-        when(event){
+    fun onEvent(event: postsEvents) {
+        when (event) {
             postsEvents.SigninButtonPressed -> {
                 mNavController.navigate(NavigationItem.SignInScreen.route)
             }
@@ -92,8 +90,10 @@ class postsViewModel @Inject constructor(
     }
 
     override fun initState(): PostsUIState =
-        PostsUIState(loading = false,
+        PostsUIState(
+            loading = false,
             posts = null,
             networkdialog = false,
-            loggedIn = false)
+            loggedIn = false
+        )
 }
