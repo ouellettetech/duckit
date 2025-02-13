@@ -16,7 +16,10 @@ constructor(var sharedPreferences: SharedPreferences) : Interceptor {
         val token = sharedPreferences.getString(SharedPrefTokenName, "")
         var request = if (token.isNullOrEmpty() ||
             chain.request().url.toString().contains("/signin") ||
-            chain.request().url.toString().contains("/signup")
+            chain.request().url.toString().contains("/signup") ||
+            chain.request().url.toString().contains("/upvote") ||
+            chain.request().url.toString().contains("/downvote")
+
         ) {
             chain.request()
         } else {
